@@ -74,6 +74,30 @@
       font-size: .86rem;
       color: var(--muted);
     }
+    .links {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      min-height: 48px;
+    }
+    .links a {
+      color: #1d4ed8;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .links a:hover { text-decoration: underline; }
+    .links ul {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+    }
+    .links .empty {
+      color: var(--muted);
+      font-size: .9rem;
+    }
   </style>
 </head>
 <body>
@@ -92,6 +116,7 @@
 
     <label for="output">出力</label>
     <textarea id="output" readonly></textarea>
+    <div id="outputLinks" class="links"><span class="empty">ここにリンク一覧が表示されます</span></div>
 
     <p class="note">
       補足: アプリのバックグラウンド再生可否は、YouTubeアプリ仕様やアカウント状態（Premium等）に依存します。
@@ -130,11 +155,48 @@
     const convertBtn = document.getElementById("convertBtn");
     const copyBtn = document.getElementById("copyBtn");
     const installBtn = document.getElementById("installBtn");
+    const outputLinks = document.getElementById("outputLinks");
+
+    function renderLinks(lines) {
+      outputLinks.textContent = "";
+      const list = document.createElement("ul");
+      let count = 0;
+
+      for (const line of lines) {
+        const url = line.trim();
+        if (!url) continue;
+        try {
+          const parsed = new URL(url);
+          const item = document.createElement("li");
+          const anchor = document.createElement("a");
+          anchor.href = parsed.toString();
+          anchor.textContent = parsed.toString();
+          anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer";
+          item.appendChild(anchor);
+          list.appendChild(item);
+          count += 1;
+        } catch {
+          // URLでない行はリンク一覧には表示しない
+        }
+      }
+
+      if (count === 0) {
+        const empty = document.createElement("span");
+        empty.className = "empty";
+        empty.textContent = "有効なURLがありません";
+        outputLinks.appendChild(empty);
+        return;
+      }
+
+      outputLinks.appendChild(list);
+    }
 
     convertBtn.addEventListener("click", () => {
       const lines = input.value.split(/\r?\n/);
-      const converted = lines.map(toWatchUrl).join("\n");
-      output.value = converted;
+      const convertedLines = lines.map(toWatchUrl);
+      output.value = convertedLines.join("\n");
+      renderLinks(convertedLines);
     });
 
     copyBtn.addEventListener("click", async () => {
