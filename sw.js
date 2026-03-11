@@ -1,6 +1,7 @@
 const CACHE_NAME = "ytconv-cache-v1";
 const APP_SHELL = [
   "./",
+  "./index.html",
   "./youtube-shorts-converter.html",
   "./manifest.webmanifest",
   "./icon.svg"

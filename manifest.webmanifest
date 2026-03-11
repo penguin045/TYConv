@@ -1,10 +1,10 @@
 {
-  "id": "./youtube-shorts-converter.html",
+  "id": "./",
   "name": "YouTubeリンク変換",
   "short_name": "YTConv",
   "description": "YouTube Shorts / Live URL を通常の watch URL に変換するツール",
   "lang": "ja",
-  "start_url": "./youtube-shorts-converter.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f9fafb",
